@@ -19,10 +19,6 @@ typedef struct {
     uint16_t held;
 } tap_dance_tap_hold_t;
 
-typedef struct {
-	uint16_t keycode;
-} tap_dance_df_layer_t;
-
 enum {
 	TD_BOOT,
 	TD_BASE,
@@ -322,9 +318,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return true;
 }
 
-#define ACTION_TAP_DANCE_DF_LAYER(layer) \
-	{ .fn = {NULL, u_td_fn_df_layer, NULL}, .user_data = (void *)&((tap_dance_df_layer_t){layer}), }
-
 #define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
     { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
@@ -361,12 +354,13 @@ void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
 	}
 }
 
-void u_td_fn_df_layer(tap_dance_state_t *state, void *user_data) {
-	tap_dance_df_layer_t *layer = (tap_dance_df_layer_t *)user_data;
+#define ACTION_TAP_DANCE_DF_LAYER(layer) \
+	{ .fn = {NULL, u_td_fn_df_layer}, .user_data = (void *)layer, }
 
+void u_td_fn_df_layer(tap_dance_state_t *state, void *user_data) {
 	if (state->count == 2) {
-		base = layer->keycode;
-		default_layer_set((layer_state_t)1 << layer->keycode);
+		base = (int)user_data;
+		default_layer_set((layer_state_t)1 << (int)user_data);
 	}
 }
 
