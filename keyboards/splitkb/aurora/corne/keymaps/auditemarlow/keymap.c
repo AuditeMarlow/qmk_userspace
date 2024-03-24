@@ -280,28 +280,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	tap_dance_action_t *action;
 
 	switch (keycode) {
-		// Layer keys
-		/* case U_BASE: */
-		/* 	if (record->event.pressed) { */
-		/* 		base = L_BASE; */
-		/* 	} */
-		/* 	return true; */
-		case U_EXTRA:
-			if (record->event.pressed) {
-				base = L_EXTRA;
-			}
-			return true;
-		case U_TAP:
-			if (record->event.pressed) {
-				base = L_TAP;
-			}
-			return true;
-		/* case U_GAME: */
-		/* 	if (record->event.pressed) { */
-		/* 		base = L_GAME; */
-		/* 	} */
-		/* 	return true; */
-
 		// Tap dance keys
 		case TD(TD_1):
 		case TD(TD_2):
