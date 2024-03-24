@@ -1,16 +1,16 @@
 #include QMK_KEYBOARD_H
 
 enum layers {
-    U_BASE = 0,
-    U_EXTRA,
-    U_TAP,
-    U_GAME,
-    U_NAV,
-    U_MOUSE,
-    U_MEDIA,
-    U_NUM,
-    U_SYM,
-    U_FUN
+    L_BASE = 0,
+    L_EXTRA,
+    L_TAP,
+    L_GAME,
+    L_NAV,
+    L_MOUSE,
+    L_MEDIA,
+    L_NUM,
+    L_SYM,
+    L_FUN
 };
 
 typedef struct {
@@ -19,54 +19,66 @@ typedef struct {
     uint16_t held;
 } tap_dance_tap_hold_t;
 
+typedef struct {
+	uint16_t keycode;
+} tap_dance_df_layer_t;
+
 enum {
-	G_1,
-	G_2,
-	G_3,
-	G_4,
-	G_5
+	TD_BOOT,
+	TD_BASE,
+	TD_EXTRA,
+	TD_TAP,
+	TD_GAME,
+	TD_1,
+	TD_2,
+	TD_3,
+	TD_4,
+	TD_5
 };
 
-int base = U_BASE;
+int base = L_BASE;
 
-#define L_BASE DF(U_BASE)
-#define L_EXTRA DF(U_EXTRA)
-#define L_TAP DF(U_TAP)
-#define L_GAME DF(U_GAME)
+#define U_BOOT TD(TD_BOOT)
 
-// Layer keys
-#define L_NAV LT(U_NAV, KC_SPC)
-#define L_SPC LT(U_NAV, KC_SPC)
-#define L_MOUSE LT(U_MOUSE, KC_TAB)
-#define L_TAB LT(U_MOUSE, KC_TAB)
-#define L_MEDIA LT(U_MEDIA, KC_ESC)
-#define L_ESC LT(U_MEDIA, KC_ESC)
-#define L_NUM LT(U_NUM, KC_BSPC)
-#define L_BSPC LT(U_NUM, KC_BSPC)
-#define L_SYM LT(U_SYM, KC_ENT)
-#define L_ENT LT(U_SYM, KC_ENT)
-#define L_FUN LT(U_FUN, KC_DEL)
-#define L_DEL LT(U_FUN, KC_DEL)
+// Default layer keys
+#define U_BASE TD(TD_BASE)
+#define U_EXTRA TD(TD_EXTRA)
+#define U_TAP TD(TD_TAP)
+#define U_GAME TD(TD_GAME)
+
+// Hold layer keys
+#define U_NAV LT(L_NAV, KC_SPC)
+#define U_SPC LT(L_NAV, KC_SPC)
+#define U_MOUSE LT(L_MOUSE, KC_TAB)
+#define U_TAB LT(L_MOUSE, KC_TAB)
+#define U_MEDIA LT(L_MEDIA, KC_ESC)
+#define U_ESC LT(L_MEDIA, KC_ESC)
+#define U_NUM LT(L_NUM, KC_BSPC)
+#define U_BSPC LT(L_NUM, KC_BSPC)
+#define U_SYM LT(L_SYM, KC_ENT)
+#define U_ENT LT(L_SYM, KC_ENT)
+#define U_FUN LT(L_FUN, KC_DEL)
+#define U_DEL LT(L_FUN, KC_DEL)
 
 // Base layer home-row mod keys
-#define LA_S MT(MOD_LALT, KC_S)
-#define LC_D MT(MOD_LCTL, KC_D)
-#define LG_A MT(MOD_LGUI, KC_A)
-#define LS_F MT(MOD_LSFT, KC_F)
-#define RA_L MT(MOD_RALT, KC_L)
-#define RC_K MT(MOD_RCTL, KC_K)
-#define RG_QUOT MT(MOD_RGUI, KC_QUOT)
-#define RS_J MT(MOD_RSFT, KC_J)
+#define U_LA_S MT(MOD_LALT, KC_S)
+#define U_LC_D MT(MOD_LCTL, KC_D)
+#define U_LG_A MT(MOD_LGUI, KC_A)
+#define U_LS_F MT(MOD_LSFT, KC_F)
+#define U_RA_L MT(MOD_RALT, KC_L)
+#define U_RC_K MT(MOD_RCTL, KC_K)
+#define U_RG_QUOT MT(MOD_RGUI, KC_QUOT)
+#define U_RS_J MT(MOD_RSFT, KC_J)
 
 // Extra layer home-row mod keys
-#define LA_R MT(MOD_LALT, KC_R)
-#define LC_S MT(MOD_LCTL, KC_S)
-#define LG_A MT(MOD_LGUI, KC_A)
-#define LS_T MT(MOD_LSFT, KC_T)
-#define RA_I MT(MOD_RALT, KC_I)
-#define RC_E MT(MOD_RCTL, KC_E)
-#define RG_O MT(MOD_RGUI, KC_O)
-#define RS_N MT(MOD_RSFT, KC_N)
+#define U_LA_R MT(MOD_LALT, KC_R)
+#define U_LC_S MT(MOD_LCTL, KC_S)
+#define U_LG_A MT(MOD_LGUI, KC_A)
+#define U_LS_T MT(MOD_LSFT, KC_T)
+#define U_RA_I MT(MOD_RALT, KC_I)
+#define U_RC_E MT(MOD_RCTL, KC_E)
+#define U_RG_O MT(MOD_RGUI, KC_O)
+#define U_RS_N MT(MOD_RSFT, KC_N)
 
 #define U_RDO KC_AGIN
 #define U_PST S(KC_INS)
@@ -88,11 +100,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | Esc    | Space  | Tab    |        | Enter  | Bspc   | Delete |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_BASE] = LAYOUT_split_3x6_3(
-        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    L_GAME,
-        _______, LG_A,    LA_S,    LC_D,    LS_F,    KC_G,                               KC_H,    RS_J,    RC_K,    RA_L,    RG_QUOT, _______,
+    [L_BASE] = LAYOUT_split_3x6_3(
+        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    U_GAME,
+        _______, U_LG_A,  U_LA_S,  U_LC_D,  U_LS_F,  KC_G,                               KC_H,    U_RS_J,  U_RC_K,  U_RA_L,  U_RG_QUOT, _______,
         _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            L_ESC,   L_SPC,   L_TAB,            L_ENT,   L_BSPC,  L_DEL
+                                            U_ESC,   U_SPC,   U_TAB,            U_ENT,   U_BSPC,  U_DEL
     ),
 
     /* Extra
@@ -107,17 +119,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | Esc    | Space  | Tab    |        | Enter  | Bspc   | Delete |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_EXTRA] = LAYOUT_split_3x6_3(
-        _______, KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT, L_GAME,
-        _______, LG_A,    LA_R,    LC_S,    LS_T,    KC_G,                               KC_M,    RS_N,    RC_E,    RA_I,    RG_O,    _______,
+    [L_EXTRA] = LAYOUT_split_3x6_3(
+        _______, KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT, U_GAME,
+        _______, U_LG_A,  U_LA_R,  U_LC_S,  U_LS_T,  KC_G,                               KC_M,    U_RS_N,  U_RC_E,  U_RA_I,  U_RG_O,  _______,
         _______, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                               KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, _______,
-                                            L_ESC,   L_SPC,   L_TAB,            L_ENT,   L_BSPC,  L_DEL
+                                            U_ESC,   U_SPC,   U_TAB,            U_ENT,   U_BSPC,  U_DEL
     ),
 
     /* Tap
      *
      *.-----------------------------------------------------,                          ,-----------------------------------------------------.
-     *|        | Q      | W      | E      | R      | T      |                          | Y      | U      | I      | O      | P      |        |
+     *|        | Q      | W      | E      | R      | T      |                          | Y      | U      | I      | O      | P      | Base   |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
      *|        | A      | S      | D      | F      | G      |                          | H      | J      | K      | L      | '      |        |
      *|--------+--------+--------+--------+--------+--------|                          |--------+--------+--------+--------+--------+--------|
@@ -126,8 +138,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | Esc    | Space  | Tab    |        | Enter  | Bspc   | Delete |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_TAP] = LAYOUT_split_3x6_3(
-        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    L_BASE,
+    [L_TAP] = LAYOUT_split_3x6_3(
+        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    U_BASE,
         _______, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT, _______,
         _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
                                             KC_ESC,  KC_SPC,  KC_TAB,           KC_ENT,  KC_BSPC, KC_DEL
@@ -145,10 +157,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | Ctrl   | Space  | C      |        | Enter  | Bspc   | Delete |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_GAME] = LAYOUT_split_3x6_3(
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     L_BASE,
+    [L_GAME] = LAYOUT_split_3x6_3(
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     U_BASE,
         KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT,  _______,
-        KC_LSFT, TD(G_1), TD(G_2), TD(G_3), TD(G_4), TD(G_5),                            KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  _______,
+        KC_LSFT, TD(TD_1),TD(TD_2),TD(TD_3),TD(TD_4),TD(TD_5),                           KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  _______,
                                             KC_LCTL, KC_SPC,  KC_C,             KC_ENT,  KC_BSPC, KC_DEL
     ),
 
@@ -164,8 +176,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    |        |        |        |        | Enter  | Bspc   | Delete |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_NAV] = LAYOUT_split_3x6_3(
-        _______, QK_BOOT, L_TAP,   L_EXTRA, L_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
+    [L_NAV] = LAYOUT_split_3x6_3(
+        _______, U_BOOT,  U_TAP,   U_EXTRA, U_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
         _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_CAPS, _______,
         _______, _______, _______, _______, _______, _______,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_INS,  _______,
                                             _______, _______, _______,          KC_ENT,  KC_BSPC, KC_DEL
@@ -183,8 +195,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    |        |        |        |        | Btn2   | Btn1   | Btn3   |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_MOUSE] = LAYOUT_split_3x6_3(
-        _______, QK_BOOT, L_TAP,   L_EXTRA, L_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
+    [L_MOUSE] = LAYOUT_split_3x6_3(
+        _______, U_BOOT,  U_TAP,   U_EXTRA, U_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
         _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                            KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, _______, _______,
         _______, _______, _______, _______, _______, _______,                            KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, _______, _______,
                                             _______, _______, _______,          KC_BTN2, KC_BTN1, KC_BTN3
@@ -202,8 +214,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    |        |        |        |        | MStop  | MPlay  | Mute   |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_MEDIA] = LAYOUT_split_3x6_3(
-        _______, QK_BOOT, L_TAP,   L_EXTRA, L_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
+    [L_MEDIA] = LAYOUT_split_3x6_3(
+        _______, U_BOOT,  U_TAP,   U_EXTRA, U_BASE,  _______,                            U_RDO,   U_PST,   U_CPY,   U_CUT,   U_UND,   _______,
         _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                            KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, _______, _______,
         _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
                                             _______, _______, _______,          KC_MSTP, KC_MPLY, KC_MUTE
@@ -221,8 +233,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | .      | 0      | -      |        |        |        |        |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_NUM] = LAYOUT_split_3x6_3(
-        _______, KC_LBRC, KC_7,    KC_8,    KC_9,    KC_RBRC,                            _______, L_BASE,  L_EXTRA, L_TAP,   QK_BOOT, _______,
+    [L_NUM] = LAYOUT_split_3x6_3(
+        _______, KC_LBRC, KC_7,    KC_8,    KC_9,    KC_RBRC,                            _______, U_BASE,  U_EXTRA, U_TAP,   U_BOOT,  _______,
         _______, KC_SCLN, KC_4,    KC_5,    KC_6,    KC_EQL,                             _______, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
         _______, KC_GRV,  KC_1,    KC_2,    KC_3,    KC_BSLS,                            _______, _______, _______, _______, _______, _______,
                                             KC_DOT,  KC_0,    KC_MINS,          _______, _______, _______
@@ -240,8 +252,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | (      | )      | _      |        |        |        |        |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_SYM] = LAYOUT_split_3x6_3(
-        _______, KC_LCBR, KC_AMPR, KC_ASTR, KC_LPRN, KC_RCBR,                            _______, L_BASE,  L_EXTRA, L_TAP,   QK_BOOT, _______,
+    [L_SYM] = LAYOUT_split_3x6_3(
+        _______, KC_LCBR, KC_AMPR, KC_ASTR, KC_LPRN, KC_RCBR,                            _______, U_BASE,  U_EXTRA, U_TAP,   U_BOOT,  _______,
         _______, KC_COLN, KC_DLR,  KC_PERC, KC_CIRC, KC_PLUS,                            _______, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
         _______, KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_PIPE,                            _______, _______, _______, _______, _______, _______,
                                             KC_LPRN, KC_RPRN, KC_UNDS,          _______, _______, _______
@@ -259,8 +271,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                                    | App    | Space  | Tab    |        |        |        |        |
      *                                    '--------------------------'        '--------------------------'
      */
-    [U_FUN] = LAYOUT_split_3x6_3(
-        _______, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_PSCR,                            _______, L_BASE,  L_EXTRA, L_TAP,   QK_BOOT, _______,
+    [L_FUN] = LAYOUT_split_3x6_3(
+        _______, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_PSCR,                            _______, U_BASE,  U_EXTRA, U_TAP,   U_BOOT,  _______,
         _______, KC_F11,  KC_F4,   KC_F5,   KC_F6,   KC_SCRL,                            _______, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
         _______, KC_F10,  KC_F1,   KC_F2,   KC_F3,   KC_PAUS,                            _______, _______, _______, _______, _______, _______,
                                             KC_APP,  KC_SPC,  KC_TAB,           _______, _______, _______
@@ -273,33 +285,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 	switch (keycode) {
 		// Layer keys
-		case L_BASE:
+		/* case U_BASE: */
+		/* 	if (record->event.pressed) { */
+		/* 		base = L_BASE; */
+		/* 	} */
+		/* 	return true; */
+		case U_EXTRA:
 			if (record->event.pressed) {
-				base = U_BASE;
+				base = L_EXTRA;
 			}
 			return true;
-		case L_EXTRA:
+		case U_TAP:
 			if (record->event.pressed) {
-				base = U_EXTRA;
+				base = L_TAP;
 			}
 			return true;
-		case L_TAP:
-			if (record->event.pressed) {
-				base = U_TAP;
-			}
-			return true;
-		case L_GAME:
-			if (record->event.pressed) {
-				base = U_GAME;
-			}
-			return true;
+		/* case U_GAME: */
+		/* 	if (record->event.pressed) { */
+		/* 		base = L_GAME; */
+		/* 	} */
+		/* 	return true; */
 
 		// Tap dance keys
-		case TD(G_1):
-		case TD(G_2):
-		case TD(G_3):
-		case TD(G_4):
-		case TD(G_5):
+		case TD(TD_1):
+		case TD(TD_2):
+		case TD(TD_3):
+		case TD(TD_4):
+		case TD(TD_5):
 			action = &tap_dance_actions[TD_INDEX(keycode)];
 			if (!record->event.pressed && action->state.count && !action->state.finished) {
                 tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
@@ -309,6 +321,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 	return true;
 }
+
+#define ACTION_TAP_DANCE_DF_LAYER(layer) \
+	{ .fn = {NULL, u_td_fn_df_layer, NULL}, .user_data = (void *)&((tap_dance_df_layer_t){layer}), }
+
+#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
+    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
 void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
     tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
@@ -337,15 +355,32 @@ void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
-    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
+void u_td_fn_boot(tap_dance_state_t *state, void *user_data) {
+	if (state->count == 2) {
+		reset_keyboard();
+	}
+}
+
+void u_td_fn_df_layer(tap_dance_state_t *state, void *user_data) {
+	tap_dance_df_layer_t *layer = (tap_dance_df_layer_t *)user_data;
+
+	if (state->count == 2) {
+		base = layer->keycode;
+		default_layer_set((layer_state_t)1 << layer->keycode);
+	}
+}
 
 tap_dance_action_t tap_dance_actions[] = {
-	[G_1] = ACTION_TAP_DANCE_TAP_HOLD(KC_1, KC_Z),
-	[G_2] = ACTION_TAP_DANCE_TAP_HOLD(KC_2, KC_X),
-	[G_3] = ACTION_TAP_DANCE_TAP_HOLD(KC_3, KC_C),
-	[G_4] = ACTION_TAP_DANCE_TAP_HOLD(KC_4, KC_V),
-	[G_5] = ACTION_TAP_DANCE_TAP_HOLD(KC_5, KC_B),
+	[TD_BOOT] = ACTION_TAP_DANCE_FN(u_td_fn_boot),
+	[TD_BASE] = ACTION_TAP_DANCE_DF_LAYER(L_BASE),
+	[TD_EXTRA] = ACTION_TAP_DANCE_DF_LAYER(L_EXTRA),
+	[TD_TAP] = ACTION_TAP_DANCE_DF_LAYER(L_TAP),
+	[TD_GAME] = ACTION_TAP_DANCE_DF_LAYER(L_GAME),
+	[TD_1] = ACTION_TAP_DANCE_TAP_HOLD(KC_1, KC_Z),
+	[TD_2] = ACTION_TAP_DANCE_TAP_HOLD(KC_2, KC_X),
+	[TD_3] = ACTION_TAP_DANCE_TAP_HOLD(KC_3, KC_C),
+	[TD_4] = ACTION_TAP_DANCE_TAP_HOLD(KC_4, KC_V),
+	[TD_5] = ACTION_TAP_DANCE_TAP_HOLD(KC_5, KC_B),
 };
 
 #ifdef OLED_ENABLE
@@ -390,27 +425,27 @@ static void render_layer_state(void) {
 		0x20, 0x9d, 0x9e, 0x9f, 0x20,
 		0x20, 0xbd, 0xba, 0xbf, 0x20,
 		0x20, 0xdd, 0xde, 0xdf, 0x20, 0};
-    if (layer_state_is(U_BASE)) {
-		if (base == U_BASE) {
+    if (layer_state_is(L_BASE)) {
+		if (base == L_BASE) {
 			oled_write_P(base_layer, false);
-		} else if (base == U_EXTRA) {
+		} else if (base == L_EXTRA) {
 			oled_write_P(extra_layer, false);
-		} else if (base == U_TAP) {
+		} else if (base == L_TAP) {
 			oled_write_P(tap_layer, false);
-		} else if (base == U_GAME) {
+		} else if (base == L_GAME) {
 			oled_write_P(game_layer, false);
 		}
-    } else if (layer_state_is(U_NUM)) {
+    } else if (layer_state_is(L_NUM)) {
         oled_write_P(num_layer, false);
-    } else if (layer_state_is(U_SYM)) {
+    } else if (layer_state_is(L_SYM)) {
         oled_write_P(sym_layer, false);
-    } else if (layer_state_is(U_NAV)) {
+    } else if (layer_state_is(L_NAV)) {
         oled_write_P(nav_layer, false);
-    } else if (layer_state_is(U_MOUSE)) {
+    } else if (layer_state_is(L_MOUSE)) {
         oled_write_P(mouse_layer, false);
-    } else if (layer_state_is(U_FUN)) {
+    } else if (layer_state_is(L_FUN)) {
         oled_write_P(fun_layer, false);
-    } else if (layer_state_is(U_MEDIA)) {
+    } else if (layer_state_is(L_MEDIA)) {
         oled_write_P(media_layer, false);
     }
 }
