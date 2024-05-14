@@ -5,7 +5,7 @@
 
 #ifdef OLED_ENABLE
 #   undef OLED_FONT_H
-#   define OLED_FONT_H "keyboards/splitkb/aurora/corne/keymaps/auditemarlow/glcdfont.c"
+#   define OLED_FONT_H "keyboards/splitkb/aurora/corne/keymaps/miryami/glcdfont.c"
 #endif
 
 // default but used in macros
