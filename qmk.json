@@ -1,6 +1,7 @@
 {
-    "userspace_version": "1.0",
+    "userspace_version": "1.1",
     "build_targets": [
-        ["splitkb/aurora/corne", "auditemarlow"]
+        ["splitkb/aurora/corne", "auditemarlow"],
+        ["ploopyco/aplus/rev2_001", "auditemarlow"]
     ]
 }
