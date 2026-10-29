@@ -443,7 +443,25 @@ int16_t rightwheel_volume_scroll_tick = 0;
 uint32_t leftwheel_timeout = 0;
 uint32_t rightwheel_timeout = 0;
 
+static float mac_drag_scroll_x_accum = 0.0f;
+static float mac_drag_scroll_y_accum = 0.0f;
+
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    /* Reduce drag-scroll speed on macOS only. */
+    if (is_drag_scroll && detected_host_os() == OS_MACOS) {
+        mac_drag_scroll_x_accum += (float)mouse_report.h / 32.0f;
+        mac_drag_scroll_y_accum += (float)mouse_report.v / 32.0f;
+
+        mouse_report.h = (int8_t)mac_drag_scroll_x_accum;
+        mouse_report.v = (int8_t)mac_drag_scroll_y_accum;
+
+        mac_drag_scroll_x_accum -= (int8_t)mac_drag_scroll_x_accum;
+        mac_drag_scroll_y_accum -= (int8_t)mac_drag_scroll_y_accum;
+    } else {
+        mac_drag_scroll_x_accum = 0.0f;
+        mac_drag_scroll_y_accum = 0.0f;
+    }
+
     // throttle reads
     if (timer_elapsed32(last_scroll_time) > 10) {
         uint16_t leftwheel_rawangle = tmag5273_get_angle(TMAG5273_D0_I2C_ADDRESS);
