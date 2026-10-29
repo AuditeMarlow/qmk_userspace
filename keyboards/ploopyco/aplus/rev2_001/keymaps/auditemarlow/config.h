@@ -19,5 +19,3 @@
 #pragma once
 
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8
-
-#undef PLOOPY_DRAGSCROLL_INVERT
